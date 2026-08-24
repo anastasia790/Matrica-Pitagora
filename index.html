@@ -223,96 +223,96 @@ button.calc{
   </div>
 
   <div class="controls">
-    <input id="birth" type="text" inputmode="numeric" autocomplete="bday" maxlength="10" value="09/06/1981" placeholder="DD/MM/YYYY" aria-label="Data di nascita" oninput="handleDateTyping(this)" onkeyup="handleDateTyping(this)">
+    <input id="birth" type="text" inputmode="numeric" autocomplete="bday" maxlength="10" value="" placeholder="DD/MM/YYYY" aria-label="Data di nascita" oninput="handleDateTyping(this)" onkeyup="handleDateTyping(this)">
     <button class="calc" id="calc" type="button" data-i18n="calculate">Calcola</button>
   </div>
 
   <div class="matrix-code-wrap">
-    <div class="matrix-code" id="matrixCode">111/—/3/4/—/66/77/8/99/ND7</div>
+    <div class="matrix-code" id="matrixCode"></div>
   </div>
 
   <div class="matrix-card">
     <div class="matrix">
       <div class="cell extra">
         <div class="label" data-i18n="extra">Numeri aggiuntivi</div>
-        <div class="value small accent" id="extraNums">34, 7, 16, 7</div>
+        <div class="value small accent" id="extraNums"></div>
       </div>
 
       <div class="cell destiny">
         <div class="label" data-i18n="destiny">Numero del destino</div>
-        <div class="value accent" id="destiny">7</div>
+        <div class="value accent" id="destiny"></div>
       </div>
 
       <div class="cell temperament">
         <div class="label" data-i18n="temperament">Temperamento</div>
-        <div class="value accent" id="temperament">3</div>
+        <div class="value accent" id="temperament"></div>
       </div>
 
       <div class="cell r2c1">
         <div class="label" data-i18n="character">Carattere</div>
-        <div class="value" id="n1">111</div>
+        <div class="value" id="n1"></div>
       </div>
 
       <div class="cell r2c2">
         <div class="label" data-i18n="health">Salute</div>
-        <div class="value" id="n4">4</div>
+        <div class="value" id="n4"></div>
       </div>
 
       <div class="cell r2c3">
         <div class="label" data-i18n="luck">Fortuna</div>
-        <div class="value" id="n7">77</div>
+        <div class="value" id="n7"></div>
       </div>
 
       <div class="cell r2c4">
         <div class="label" data-i18n="goal">Obiettivo</div>
-        <div class="value accent" id="goal">6 (6)</div>
+        <div class="value accent" id="goal"></div>
       </div>
 
       <div class="cell r3c1">
         <div class="label" data-i18n="energy">Energia</div>
-        <div class="value" id="n2">—</div>
+        <div class="value" id="n2"></div>
       </div>
 
       <div class="cell r3c2">
         <div class="label" data-i18n="logic">Logica</div>
-        <div class="value" id="n5">—</div>
+        <div class="value" id="n5"></div>
       </div>
 
       <div class="cell r3c3">
         <div class="label" data-i18n="duty">Dovere</div>
-        <div class="value" id="n8">8</div>
+        <div class="value" id="n8"></div>
       </div>
 
       <div class="cell r3c4">
         <div class="label" data-i18n="family">Famiglia</div>
-        <div class="value accent" id="family">1</div>
+        <div class="value accent" id="family"></div>
       </div>
 
       <div class="cell r4c1">
         <div class="label" data-i18n="interest">Interesse</div>
-        <div class="value" id="n3">3</div>
+        <div class="value" id="n3"></div>
       </div>
 
       <div class="cell r4c2">
         <div class="label" data-i18n="work">Lavoro</div>
-        <div class="value" id="n6">66</div>
+        <div class="value" id="n6"></div>
       </div>
 
       <div class="cell r4c3">
         <div class="label" data-i18n="memory">Memoria</div>
-        <div class="value" id="n9">99</div>
+        <div class="value" id="n9"></div>
       </div>
 
       <div class="cell r4c4">
         <div class="label" data-i18n="habits">Stabilità</div>
-        <div class="value accent" id="habits">5</div>
+        <div class="value accent" id="habits"></div>
       </div>
 
       <div class="blank left" aria-hidden="true"></div>
 
       <div class="cell practice">
         <div class="label" data-i18n="practice">Praticità</div>
-        <div class="value accent" id="practice">3</div>
+        <div class="value accent" id="practice"></div>
       </div>
 
       <div class="blank right1" aria-hidden="true"></div>
@@ -418,7 +418,6 @@ button.calc{
     const digits = onlyDigits(el.value);
     const formatted = formatDateDigits(digits);
     if(el.value !== formatted) el.value = formatted;
-    render();
   }
 
   function formatDateField(){
@@ -531,7 +530,6 @@ button.calc{
   $("langIt").addEventListener("click", ()=>setLanguage("it"));
 
   setLanguage("it");
-  render();
 })();
 </script>
 </body>
