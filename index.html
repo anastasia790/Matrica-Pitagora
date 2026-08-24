@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Матрица Пифагора — квадратная версия</title>
+<style>
+:root{
+  --bg1:#f8f0e2;
+  --bg2:#e7cda6;
+  --paper:rgba(255,250,242,.90);
+  --brown:#6b4732;
+  --brown2:#80614d;
+  --gold:#b78a4a;
+  --muted:#8d7461;
+  --line:rgba(107,71,50,.72);
+  --shadow:rgba(92,57,34,.12);
+  --cell: min(22vw, 175px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  font-family:Georgia,"Times New Roman",serif;
+  color:var(--brown);
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,255,255,.88),transparent 31%),
+    linear-gradient(145deg,var(--bg1),var(--bg2));
+}
+.page{
+  width:min(980px,100%);
+  margin:auto;
+  padding:24px 10px 56px;
+  text-align:center;
+}
+h1{
+  margin:0 0 12px;
+  font-size:clamp(34px,6vw,54px);
+  font-weight:500;
+}
+.lang-switch{
+  display:inline-flex;
+  gap:4px;
+  padding:4px;
+  margin:0 auto 18px;
+  border:1px solid rgba(107,71,50,.18);
+  border-radius:999px;
+  background:rgba(255,250,242,.58);
+}
+.lang-btn{
+  border:0;
+  border-radius:999px;
+  padding:8px 13px;
+  background:transparent;
+  color:var(--brown);
+  font:700 13px/1 Arial,sans-serif;
+}
+.lang-btn.active{background:var(--brown);color:#fff8ef}
+
+.controls{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 10px;
+  border-radius:18px;
+  background:var(--paper);
+  border:1px solid rgba(107,71,50,.22);
+  box-shadow:0 8px 24px var(--shadow);
+  margin-bottom:24px;
+}
+input[type=date]{
+  border:0;
+  outline:0;
+  background:transparent;
+  color:var(--brown);
+  font:700 19px/1 Arial,sans-serif;
+  padding:10px 8px;
+  min-width:154px;
+}
+button.calc{
+  border:0;
+  border-radius:13px;
+  padding:13px 17px;
+  background:var(--brown);
+  color:#fff8ef;
+  font:700 15px/1 Arial,sans-serif;
+}
+
+.matrix-code-wrap{
+  width:min(720px,96vw);
+  margin:0 auto 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.matrix-code{
+  width:100%;
+  padding:11px 16px;
+  border:1.5px solid var(--line);
+  border-radius:999px;
+  background:rgba(255,250,242,.72);
+  font:700 14px/1.25 Arial,sans-serif;
+  color:var(--brown);
+  text-align:center;
+  overflow-wrap:anywhere;
+}
+.matrix-card{
+  width:max-content;
+  max-width:100%;
+  margin:0 auto;
+  padding:14px 14px 10px;
+  border-radius:24px;
+  background:rgba(255,250,242,.45);
+  box-shadow:0 12px 34px rgba(92,57,34,.06);
+}
+
+.matrix{
+  position:relative;
+  display:grid;
+  grid-template-columns:repeat(4,var(--cell));
+  grid-template-rows:repeat(5,var(--cell));
+  width:max-content;
+  border-top:2px solid var(--line);
+  border-left:2px solid var(--line);
+  background:rgba(255,250,242,.28);
+  margin:0 auto;
+}
+.cell{
+  border-right:2px solid var(--line);
+  border-bottom:2px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:18px 8px 10px;
+  gap:16px;
+  background:transparent;
+  overflow:hidden;
+}
+.extra{grid-column:1 / span 2; grid-row:1}
+.destiny{grid-column:3; grid-row:1}
+.temperament{grid-column:4; grid-row:1}
+
+.r2c1{grid-column:1;grid-row:2}
+.r2c2{grid-column:2;grid-row:2}
+.r2c3{grid-column:3;grid-row:2}
+.r2c4{grid-column:4;grid-row:2}
+
+.r3c1{grid-column:1;grid-row:3}
+.r3c2{grid-column:2;grid-row:3}
+.r3c3{grid-column:3;grid-row:3}
+.r3c4{grid-column:4;grid-row:3}
+
+.r4c1{grid-column:1;grid-row:4}
+.r4c2{grid-column:2;grid-row:4}
+.r4c3{grid-column:3;grid-row:4}
+.r4c4{grid-column:4;grid-row:4}
+
+.practice{
+  grid-column:2;
+  grid-row:5;
+}
+
+.blank{
+  border-right:2px solid var(--line);
+  border-bottom:2px solid var(--line);
+}
+.blank.left{grid-column:1;grid-row:5}
+.blank.right1{grid-column:3;grid-row:5}
+.blank.right2{grid-column:4;grid-row:5}
+
+.label{
+  font:500 18px/1.25 Arial,sans-serif;
+  color:var(--brown2);
+  text-align:center;
+}
+.value{
+  font:700 30px/1.05 Georgia,"Times New Roman",serif;
+  color:var(--brown);
+  letter-spacing:.2px;
+  text-align:center;
+}
+.value.accent{color:var(--gold)}
+.value.small{font-size:26px}
+
+
+@media (max-width:700px){
+  :root{ --cell:min(22.5vw, 150px); }
+  .page{padding:18px 6px 38px}
+  .matrix-code-wrap{
+  width:min(720px,96vw);
+  margin:0 auto 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.matrix-code{
+  width:100%;
+  padding:11px 16px;
+  border:1.5px solid var(--line);
+  border-radius:999px;
+  background:rgba(255,250,242,.72);
+  font:700 14px/1.25 Arial,sans-serif;
+  color:var(--brown);
+  text-align:center;
+  overflow-wrap:anywhere;
+}
+.matrix-card{padding:10px 10px 8px;border-radius:20px}
+  .cell{padding:12px 4px 8px;gap:10px}
+  .label{font-size:14px;line-height:1.2}
+  .value{font-size:24px}
+  .value.small{font-size:22px}
+  input[type=date]{font-size:17px;min-width:142px}
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <h1 data-i18n="title">Matrice di Pitagora</h1>
+
+  <div class="lang-switch">
+    <button class="lang-btn" id="langRu" type="button">RU</button>
+    <button class="lang-btn active" id="langIt" type="button">IT</button>
+  </div>
+
+  <div class="controls">
+    <input id="birth" type="text" inputmode="numeric" autocomplete="bday" maxlength="10" value="09/06/1981" placeholder="DD/MM/YYYY" aria-label="Data di nascita" oninput="handleDateTyping(this)" onkeyup="handleDateTyping(this)">
+    <button class="calc" id="calc" type="button" data-i18n="calculate">Calcola</button>
+  </div>
+
+  <div class="matrix-code-wrap">
+    <div class="matrix-code" id="matrixCode">111/—/3/4/—/66/77/8/99/ND7</div>
+  </div>
+
+  <div class="matrix-card">
+    <div class="matrix">
+      <div class="cell extra">
+        <div class="label" data-i18n="extra">Numeri aggiuntivi</div>
+        <div class="value small accent" id="extraNums">34, 7, 16, 7</div>
+      </div>
+
+      <div class="cell destiny">
+        <div class="label" data-i18n="destiny">Numero del destino</div>
+        <div class="value accent" id="destiny">7</div>
+      </div>
+
+      <div class="cell temperament">
+        <div class="label" data-i18n="temperament">Temperamento</div>
+        <div class="value accent" id="temperament">3</div>
+      </div>
+
+      <div class="cell r2c1">
+        <div class="label" data-i18n="character">Carattere</div>
+        <div class="value" id="n1">111</div>
+      </div>
+
+      <div class="cell r2c2">
+        <div class="label" data-i18n="health">Salute</div>
+        <div class="value" id="n4">4</div>
+      </div>
+
+      <div class="cell r2c3">
+        <div class="label" data-i18n="luck">Fortuna</div>
+        <div class="value" id="n7">77</div>
+      </div>
+
+      <div class="cell r2c4">
+        <div class="label" data-i18n="goal">Obiettivo</div>
+        <div class="value accent" id="goal">6 (6)</div>
+      </div>
+
+      <div class="cell r3c1">
+        <div class="label" data-i18n="energy">Energia</div>
+        <div class="value" id="n2">—</div>
+      </div>
+
+      <div class="cell r3c2">
+        <div class="label" data-i18n="logic">Logica</div>
+        <div class="value" id="n5">—</div>
+      </div>
+
+      <div class="cell r3c3">
+        <div class="label" data-i18n="duty">Dovere</div>
+        <div class="value" id="n8">8</div>
+      </div>
+
+      <div class="cell r3c4">
+        <div class="label" data-i18n="family">Famiglia</div>
+        <div class="value accent" id="family">1</div>
+      </div>
+
+      <div class="cell r4c1">
+        <div class="label" data-i18n="interest">Interesse</div>
+        <div class="value" id="n3">3</div>
+      </div>
+
+      <div class="cell r4c2">
+        <div class="label" data-i18n="work">Lavoro</div>
+        <div class="value" id="n6">66</div>
+      </div>
+
+      <div class="cell r4c3">
+        <div class="label" data-i18n="memory">Memoria</div>
+        <div class="value" id="n9">99</div>
+      </div>
+
+      <div class="cell r4c4">
+        <div class="label" data-i18n="habits">Stabilità</div>
+        <div class="value accent" id="habits">5</div>
+      </div>
+
+      <div class="blank left" aria-hidden="true"></div>
+
+      <div class="cell practice">
+        <div class="label" data-i18n="practice">Praticità</div>
+        <div class="value accent" id="practice">3</div>
+      </div>
+
+      <div class="blank right1" aria-hidden="true"></div>
+      <div class="blank right2" aria-hidden="true"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+
+  const I18N = {
+    ru:{
+      title:"Матрица Пифагора",
+      calculate:"Рассчитать",
+      extra:"Доп. числа",
+      destiny:"Число судьбы",
+      temperament:"Темперамент",
+      character:"Характер",
+      health:"Здоровье",
+      luck:"Удача",
+      goal:"Цель",
+      energy:"Энергия",
+      logic:"Логика",
+      duty:"Долг",
+      family:"Семья",
+      interest:"Интерес",
+      work:"Труд",
+      memory:"Память",
+      habits:"Привычки",
+      practice:"Быт"
+    },
+    it:{
+      title:"Matrice di Pitagora",
+      calculate:"Calcola",
+      extra:"Numeri aggiuntivi",
+      destiny:"Numero del destino",
+      temperament:"Temperamento",
+      character:"Carattere",
+      health:"Salute",
+      luck:"Fortuna",
+      goal:"Obiettivo",
+      energy:"Energia",
+      logic:"Logica",
+      duty:"Dovere",
+      family:"Famiglia",
+      interest:"Interesse",
+      work:"Lavoro",
+      memory:"Memoria",
+      habits:"Stabilità",
+      practice:"Praticità"
+    }
+  };
+
+  let currentLang = "it";
+
+  function setLanguage(next){
+    const parts = parseDateInput($("birth").value);
+    currentLang = next;
+    document.documentElement.lang = next;
+    document.querySelectorAll("[data-i18n]").forEach(el=>{
+      const key = el.dataset.i18n;
+      if (I18N[next][key]) el.textContent = I18N[next][key];
+    });
+    $("langRu").classList.toggle("active", next==="ru");
+    $("langIt").classList.toggle("active", next==="it");
+    $("birth").placeholder = next==="it" ? "DD/MM/YYYY" : "ДД.ММ.ГГГГ";
+    $("birth").setAttribute("aria-label", next==="it" ? "Data di nascita" : "Дата рождения");
+    if(parts){
+      $("birth").value = formatDateParts(parts.day, parts.month, parts.year, next);
+    }else{
+      formatDateField();
+    }
+    render();
+  }
+
+  const digitsOf = n => String(Math.abs(n)).split("").map(Number);
+  const sumDigitsOnce = n => digitsOf(n).reduce((a,b)=>a+b,0);
+
+  function destinyFromSecond(n){
+    let x = n;
+    if (x === 11) return 11;
+    while (x > 9){
+      x = sumDigitsOnce(x);
+      if (x === 11) return 11;
+    }
+    return x;
+  }
+
+  function onlyDigits(value){
+    return String(value || "").replace(/\D/g,"").slice(0,8);
+  }
+
+  function formatDateDigits(digits, lang=currentLang){
+    const sep = lang==="it" ? "/" : ".";
+    if(digits.length <= 2) return digits;
+    if(digits.length <= 4) return digits.slice(0,2) + sep + digits.slice(2);
+    return digits.slice(0,2) + sep + digits.slice(2,4) + sep + digits.slice(4,8);
+  }
+
+  function handleDateTyping(el){
+    const digits = onlyDigits(el.value);
+    const formatted = formatDateDigits(digits);
+    if(el.value !== formatted) el.value = formatted;
+    render();
+  }
+
+  function formatDateField(){
+    handleDateTyping($("birth"));
+  }
+
+  function formatDateParts(day, month, year, lang=currentLang){
+    const sep = lang==="it" ? "/" : ".";
+    return String(day).padStart(2,"0") + sep + String(month).padStart(2,"0") + sep + String(year).padStart(4,"0");
+  }
+
+  function parseDateInput(value){
+    const digits = onlyDigits(value);
+    if(digits.length !== 8) return null;
+    const day = Number(digits.slice(0,2));
+    const month = Number(digits.slice(2,4));
+    const year = Number(digits.slice(4,8));
+    if(year < 1 || month < 1 || month > 12 || day < 1) return null;
+    const dt = new Date(year, month-1, day);
+    if(dt.getFullYear() !== year || dt.getMonth() !== month-1 || dt.getDate() !== day) return null;
+    return {day, month, year};
+  }
+
+  function calculateMatrix(day, month, year){
+    const birthDigits = [
+      ...String(day).padStart(2,"0"),
+      ...String(month).padStart(2,"0"),
+      ...String(year).padStart(4,"0")
+    ].map(Number);
+
+    const first = birthDigits.reduce((a,b)=>a+b,0);
+    const second = sumDigitsOnce(first);
+    const constant = Number(String(day)[0]) * 2;
+    const third = first - constant;
+    const fourth = sumDigitsOnce(third);
+    const destiny = destinyFromSecond(second);
+
+    const allDigits = [
+      ...birthDigits,
+      ...digitsOf(first),
+      ...digitsOf(second),
+      ...digitsOf(third),
+      ...digitsOf(fourth)
+    ].filter(n => n !== 0);
+
+    const counts = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
+    allDigits.forEach(n => { if (counts[n] !== undefined) counts[n]++; });
+
+    const lines = {
+      temperament: counts[3] + counts[5] + counts[7],
+      goal: counts[1] + counts[4] + counts[7],
+      family: counts[2] + counts[5] + counts[8],
+      habits: counts[3] + counts[6] + counts[9],
+      practice: counts[4] + counts[5] + counts[6]
+    };
+
+    return {first, second, third, fourth, destiny, counts, lines};
+  }
+
+  const repeats = (digit, count) => count ? String(digit).repeat(count) : "—";
+
+  function remainingOnesForHiddenGoal(count1){
+    if(count1 <= 2) return count1;
+    // Repeated transition 11 -> 8:
+    // odd count leaves 1 one, even count leaves 2 ones.
+    return (count1 % 2 === 0) ? 2 : 1;
+  }
+
+  function hiddenGoal(counts){
+    const freeOnes = remainingOnesForHiddenGoal(counts[1]);
+    return freeOnes + counts[4] + counts[7] + counts[6];
+  }
+
+  function matrixCode(counts, destiny){
+    const sectors=[];
+    for(let n=1;n<=9;n++){
+      sectors.push(counts[n] ? String(n).repeat(counts[n]) : "—");
+    }
+    return sectors.join("/") + "/" + (currentLang==="it" ? "ND" : "ЧС") + destiny;
+  }
+
+  function render(){
+    const parsed = parseDateInput($("birth").value);
+    if (!parsed) return;
+    const {day, month, year} = parsed;
+    const r = calculateMatrix(day, month, year);
+
+    $("extraNums").textContent = [r.first, r.second, r.third, r.fourth].join(", ");
+    $("destiny").textContent = r.destiny;
+    $("temperament").textContent = r.lines.temperament;
+    $("goal").textContent = r.lines.goal + " (" + hiddenGoal(r.counts) + ")";
+    $("family").textContent = r.lines.family;
+    $("habits").textContent = r.lines.habits;
+    $("practice").textContent = r.lines.practice;
+    $("matrixCode").textContent = matrixCode(r.counts, r.destiny);
+
+    for(let n=1;n<=9;n++){
+      $("n"+n).textContent = repeats(n, r.counts[n]);
+    }
+  }
+
+  window.handleDateTyping = handleDateTyping;
+
+  $("calc").addEventListener("click", render);
+  $("birth").addEventListener("change", ()=>{
+    formatDateField();
+    render();
+  });
+  $("langRu").addEventListener("click", ()=>setLanguage("ru"));
+  $("langIt").addEventListener("click", ()=>setLanguage("it"));
+
+  setLanguage("it");
+  render();
+})();
+</script>
+</body>
+</html>
